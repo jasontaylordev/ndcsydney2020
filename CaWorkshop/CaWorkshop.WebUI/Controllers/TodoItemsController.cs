@@ -1,7 +1,6 @@
 using CaWorkshop.Application.TodoItems.Commands.CreateTodoItem;
 using CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem;
 using CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
