@@ -3,10 +3,6 @@ using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CaWorkshop.WebUI.Data
 {
@@ -17,5 +13,9 @@ namespace CaWorkshop.WebUI.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<TodoList> TodoLists { get; set; }
+
+        public DbSet<TodoItem> TodoItems { get; set; }
     }
 }

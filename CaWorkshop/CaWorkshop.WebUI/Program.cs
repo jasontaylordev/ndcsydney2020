@@ -1,11 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CaWorkshop.WebUI.Data;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Runtime.InteropServices;
 
 namespace CaWorkshop.WebUI
 {
@@ -13,14 +15,42 @@ namespace CaWorkshop.WebUI
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var environment = services.GetRequiredService<IWebHostEnvironment>();
+                    if (environment.IsDevelopment())
+                    {
+                        var context = services
+                            .GetRequiredService<ApplicationDbContext>();
+
+                        context.Database.Migrate();
+
+                        ApplicationDbContextSeeder.Seed(context);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = services
+                        .GetRequiredService<ILogger<Program>>();
+
+                    logger.LogError(ex, "An error occurred while " +
+                        "migrating or initializing the database.");
+
+                    throw;
+                }
+            }
+
+            host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }
