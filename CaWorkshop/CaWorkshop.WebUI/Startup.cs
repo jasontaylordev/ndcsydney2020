@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 
 namespace CaWorkshop.WebUI

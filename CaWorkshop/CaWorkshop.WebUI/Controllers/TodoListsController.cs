@@ -4,12 +4,20 @@ using CaWorkshop.Application.TodoLists.Commands.UpdateTodoList;
 using CaWorkshop.Application.TodoLists.Queries.GetTodoLists;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace CaWorkshop.WebUI.Controllers
 {
     public class TodoListsController : ApiControllerBase
     {
+        private readonly ILogger<TodoListsController> _logger;
+
+        public TodoListsController(ILogger<TodoListsController> logger)
+        {
+            _logger = logger;
+        }
+
         // GET: api/TodoLists
         [HttpGet]
         public async Task<ActionResult<TodosVm>> GetTodoLists()

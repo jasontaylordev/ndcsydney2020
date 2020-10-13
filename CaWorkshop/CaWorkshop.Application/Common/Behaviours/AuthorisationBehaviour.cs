@@ -2,6 +2,7 @@
 using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Application.Common.Security;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
