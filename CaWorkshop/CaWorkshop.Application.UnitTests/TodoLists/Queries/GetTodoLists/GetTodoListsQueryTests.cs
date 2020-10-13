@@ -32,6 +32,7 @@ namespace CaWorkshop.Application.UnitTests.TodoLists.Queries.GetTodoLists
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
+
             // Assert
             result.ShouldBeOfType<TodosVm>();
             result.Lists.Count.ShouldBe(1);

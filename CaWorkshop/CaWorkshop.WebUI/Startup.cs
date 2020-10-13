@@ -1,8 +1,11 @@
 using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Infrastructure;
+using CaWorkshop.Infrastructure.Persistence;
 using CaWorkshop.WebUI.Filters;
 using CaWorkshop.WebUI.Services;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +34,17 @@ namespace CaWorkshop.WebUI
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>()
+                .AddSmtpHealthCheck(options =>
+                {
+                    options.Host = "localhost";
+                    options.Port = 25;
+                });
+
+            services.AddHealthChecksUI()
+                .AddInMemoryStorage();
 
             services.AddControllersWithViews(options =>
                 options.Filters.Add(new ApiExceptionFilterAttribute()));
@@ -101,6 +115,12 @@ namespace CaWorkshop.WebUI
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    //Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
 
             app.UseSpa(spa =>
