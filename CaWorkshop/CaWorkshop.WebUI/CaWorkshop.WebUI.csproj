@@ -23,6 +23,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.8.2" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Seq.Extensions.Logging" Version="4.0.2" />
   </ItemGroup>
 
@@ -40,6 +44,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="wwwroot\api\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -50,6 +55,12 @@
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Core31) run /variables:Configuration=$(Configuration)" />
+    <RemoveDir Directories="$(OutDir)References" />
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">

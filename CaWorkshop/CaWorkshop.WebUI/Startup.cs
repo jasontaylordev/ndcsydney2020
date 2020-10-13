@@ -82,8 +82,12 @@ namespace CaWorkshop.WebUI
                 app.UseSpaStaticFiles();
             }
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.Path = "/api";
+                settings.DocumentPath = "/api/specification.json";
+            });
+
             // app.UseReDoc(); -- Useful public documentation (no try it now feature)
 
             app.UseRouting();
