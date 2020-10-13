@@ -1,5 +1,6 @@
 ﻿using CaWorkshop.Application.Common.GuardClauses;
 using CaWorkshop.Application.Common.Interfaces;
+using CaWorkshop.Application.Common.Security;
 using CaWorkshop.Domain.Entities;
 using MediatR;
 using System.Threading;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem
 {
-    public partial class UpdateTodoItemCommand : IRequest
+    [Authorise]
+    public class UpdateTodoItemCommand : IRequest
     {
         public long Id { get; set; }
 

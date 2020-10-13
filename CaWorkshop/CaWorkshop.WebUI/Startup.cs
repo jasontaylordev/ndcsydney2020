@@ -1,10 +1,15 @@
+using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Infrastructure;
 using CaWorkshop.WebUI.Filters;
+using CaWorkshop.WebUI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
+using NSwag.Generation.Processors.Security;
+using System.Linq;
 
 namespace CaWorkshop.WebUI
 {
@@ -23,6 +28,9 @@ namespace CaWorkshop.WebUI
             services.AddInfrastructureServices(Configuration);
             services.AddApplicationServices();
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
             services.AddControllersWithViews(options =>
                 options.Filters.Add(new ApiExceptionFilterAttribute()));
 
@@ -31,6 +39,17 @@ namespace CaWorkshop.WebUI
             services.AddOpenApiDocument(configure =>
             {
                 configure.Title = "CaWorkshop API";
+                configure.AddSecurity("JWT", Enumerable.Empty<string>(),
+                    new OpenApiSecurityScheme
+                    {
+                        Type = OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        In = OpenApiSecurityApiKeyLocation.Header,
+                        Description = "Type into the textbox: Bearer {your JWT token}."
+                    });
+
+                configure.OperationProcessors.Add(
+                    new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
 
             // In production, the Angular files will be served from this directory

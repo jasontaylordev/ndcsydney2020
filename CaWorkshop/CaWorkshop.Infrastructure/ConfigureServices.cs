@@ -27,6 +27,8 @@ namespace CaWorkshop.Infrastructure
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
+            services.AddScoped<IIdentityService, IdentityService>();
+
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 

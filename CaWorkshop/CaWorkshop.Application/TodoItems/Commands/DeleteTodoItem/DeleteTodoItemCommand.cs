@@ -1,11 +1,13 @@
 ﻿using CaWorkshop.Application.Common.GuardClauses;
 using CaWorkshop.Application.Common.Interfaces;
+using CaWorkshop.Application.Common.Security;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem
 {
+    [Authorise]
     public class DeleteTodoItemCommand : IRequest
     {
         public long Id { get; set; }

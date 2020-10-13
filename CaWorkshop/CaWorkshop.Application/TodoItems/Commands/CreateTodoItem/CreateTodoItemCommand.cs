@@ -1,4 +1,5 @@
 ﻿using CaWorkshop.Application.Common.Interfaces;
+using CaWorkshop.Application.Common.Security;
 using CaWorkshop.Domain.Entities;
 using MediatR;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CaWorkshop.Application.TodoItems.Commands.CreateTodoItem
 {
+    [Authorise]
     public class CreateTodoItemCommand : IRequest<long>
     {
         public int ListId { get; set; }
