@@ -12,6 +12,10 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TodoComponent } from './todo/todo.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +23,7 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
+    TodoComponent,
     FetchDataComponent
   ],
   imports: [
@@ -26,11 +31,15 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
     HttpClientModule,
     FormsModule,
     ApiAuthorizationModule,
+    FontAwesomeModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
+      { path: 'todo', component: TodoComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-    ])
+    ]),
+    ModalModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
